@@ -175,16 +175,11 @@
                 , <&macro_release &kp LALT>;
         };
 
-		sticky_alt_tab: sticky_alt_tab {
+        alt_tab_stay: tab_stay {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings
-                = <&macro_press &kp LALT>
-                , <&macro_tap &kp TAB>
-                , <&macro_pause_for_release>
-                , <&macro_release &kp LALT>;
+            bindings = <&macro_press &kp LALT>, <&macro_tap &kp TAB>;
         };
-		
 
 		rgb_off: rgb_off {
 			compatible = "zmk,behavior-macro";
