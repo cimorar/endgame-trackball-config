@@ -131,6 +131,14 @@
 			tapping-term-ms = <300>;
 			bindings = <&kp LC(C)>, <&kp LC(V)>;
 		};
+
+		BCK_FWD: tap-dance-1 {
+			compatible = "zmk,behavior-tap-dance";
+			display-name = "Back/Forward (tap/double-tap)";
+			#binding-cells = <0>;
+			tapping-term-ms = <300>;
+			bindings = <&mkp MB4>, <&mkp MB5>;
+		};
 	};
 
 	trackball {
