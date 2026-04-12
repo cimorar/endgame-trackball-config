@@ -215,6 +215,16 @@
                 , <&macro_release &kp LALT>;
         };
 
+		lctrl_tab: lctrl_tab {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_press &kp LCTRL>
+                , <&macro_tap &kp TAB>
+                , <&macro_pause_for_release>
+                , <&macro_release &kp LCTRL>;
+        };		
+
 		rgb_off: rgb_off {
 			compatible = "zmk,behavior-macro";
 			display-name = "RGB off";
