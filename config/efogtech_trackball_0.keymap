@@ -164,17 +164,6 @@
 	};
 
 	macros {
-		rgb_tog: rgb_tog {
-			compatible = "zmk,behavior-macro";
-			display-name = "Toggle RGB";
-			#binding-cells = <0>;
-			wait-ms = <20>;
-			bindings
-			= <&rgb_ug RGB_TOG>
-			, <&ext_power EP_TOG>
-			;
-		};
-
 		alt_tab: alt_tab {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
