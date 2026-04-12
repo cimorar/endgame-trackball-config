@@ -135,4 +135,75 @@
 							   <&zip_rotate_pointer>, <&zip_rotate_scroll>, <&zip_ble_report_rate_limit>;
 		};
 	};
+
+	behaviors {
+		cdch: click-double-click-hold {
+			compatible = "zmk,behavior-hold-tap";
+			display-name = "Copy/paste/layer (click/double-click/hold)";
+			#binding-cells = <2>;
+			flavor = "tap-preferred";
+			tapping-term-ms = <325>;
+			bindings = <&mo>, <&cdc>;
+		};
+
+		cdc: click-double-click {
+			compatible = "zmk,behavior-tap-dance";
+			display-name = "Copy/paste (click/double-click)";
+			#binding-cells = <0>;
+			tapping-term-ms = <300>;
+			bindings = <&kp LC(C)>, <&kp LC(V)>;
+		};
+
+		BCK_FWD: tap-dance-1 {
+			compatible = "zmk,behavior-tap-dance";
+			display-name = "Back/Forward (tap/double-tap)";
+			#binding-cells = <0>;
+			tapping-term-ms = <300>;
+			bindings = <&mkp MB4>, <&mkp MB5>;
+		};
+	};
+
+	macros {
+		rgb_tog: rgb_tog {
+			compatible = "zmk,behavior-macro";
+			display-name = "Toggle RGB";
+			#binding-cells = <0>;
+			wait-ms = <20>;
+			bindings
+			= <&rgb_ug RGB_TOG>
+			, <&ext_power EP_TOG>
+			;
+		};
+
+		alt_tab: alt_tab {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_press &kp LALT>
+                , <&macro_tap &kp TAB>
+                , <&macro_pause_for_release>
+                , <&macro_release &kp LALT>;
+        };
+
+		lctrl_tab: lctrl_tab {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings
+                = <&macro_press &kp LCTRL>
+                , <&macro_tap &kp TAB>
+                , <&macro_pause_for_release>
+                , <&macro_release &kp LCTRL>;
+        };		
+
+		rgb_off: rgb_off {
+			compatible = "zmk,behavior-macro";
+			display-name = "RGB off";
+			#binding-cells = <0>;
+			wait-ms = <20>;
+			bindings
+			= <&ext_power EP_OFF>
+			, <&rgb_ug RGB_OFF>
+			;
+		};
+	};	
 };
