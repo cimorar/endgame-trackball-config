@@ -20,11 +20,13 @@
 
 #include "zephyr/bluetooth/bluetooth.h"
 #include "zephyr/drivers/flash.h"
+#include "zmk/ble.h"
 #include "zmk/endpoints.h"
 #include "zmk/settings.h"
 #include "zmk/keymap.h"
 #include "zmk/studio/core.h"
 #include "zmk_adaptive_feedback/adaptive_feedback.h"
+#include "zmk_esb/endpoint.h"
 
 #define DT_DRV_COMPAT zmk_endgame
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
@@ -42,26 +44,19 @@ static int cmd_version(const struct shell *sh, const size_t argc, char **argv) {
 }
 
 static int cmd_output(const struct shell *sh, const size_t argc, char **argv) {
-    if (argc < 1) {
-        shprint(sh, "Usage: board output [usb|ble]");
-        return -EINVAL;
-    }
-
-    if (strcmp(argv[1], "usb") == 0) {
-        zmk_endpoints_select_transport(ZMK_TRANSPORT_USB);
-    } else if (strcmp(argv[1], "ble") == 0) {
-        zmk_endpoints_select_transport(ZMK_TRANSPORT_BLE);
-    } else {
-        if (zmk_endpoints_selected().transport == ZMK_TRANSPORT_USB) {
-            shprint(sh, "Output: USB");
+    if (zmk_endpoints_selected().transport == ZMK_TRANSPORT_USB) {
+        shprint(sh, "Output: USB");
+    } else if (IS_ENABLED(CONFIG_ZMK_ESB_ENDPOINT) &&
+               zmk_ble_active_profile_index() == (ZMK_BLE_PROFILE_COUNT - 1)) {
+        if (zmk_esb_endpoint_is_active()) {
+            shprint(sh, "Output: ESB");
         } else {
-            shprint(sh, "Output: BLE");
+            shprint(sh, "Output: ESB (not active)");
         }
-
-        return 0;
+    } else {
+        shprint(sh, "Output: BLE");
     }
 
-    shprint(sh, "Done.");
     return 0;
 }
 
@@ -265,6 +260,7 @@ static int cmd_restore(const struct shell *sh, const size_t argc, char **argv) {
     *hash = '\0';
     const uint32_t offset = strtoul(line, NULL, 16);
     strncpy(hexdata, colon + 1, sizeof(hexdata) - 1);
+
     hexdata[sizeof(hexdata) - 1] = '\0';
     const uint32_t crc_val = strtoul(hash + 1, NULL, 16);
 
@@ -394,7 +390,11 @@ static int cmd_backup(const struct shell *sh, const size_t argc, char **argv) {
     
     const uint32_t storage_addr = 0x0006c000;
     const uint32_t storage_size = 0x00008000;
+#ifdef CONFIG_LOG_DOMAIN_ID
     const uint32_t saved_level = log_filter_set(NULL, CONFIG_LOG_DOMAIN_ID, 0, LOG_LEVEL_NONE);
+#else
+    const uint32_t saved_level = -1;
+#endif
 
     shprint(sh, "");
     shprint(sh, "BACKUP START %08X %08X", storage_addr, storage_size);
@@ -416,12 +416,14 @@ static int cmd_backup(const struct shell *sh, const size_t argc, char **argv) {
     shprint(sh, "BACKUP END");
     shprint(sh, "");
 
+#ifdef CONFIG_LOG_DOMAIN_ID
     log_filter_set(NULL, CONFIG_LOG_DOMAIN_ID, 0, saved_level);
+#endif
     return 0;
 }
 
 SHELL_STATIC_SUBCMD_SET_CREATE(sub_board,
-    SHELL_CMD(output, NULL, "Get or set output channel (USB/BLE)", cmd_output),
+    SHELL_CMD(output, NULL, "See current output", cmd_output),
     SHELL_CMD(reboot, NULL, "Reboot the device", cmd_reboot),
     SHELL_CMD(erase, NULL, "Erase all settings", cmd_erase),
     SHELL_CMD(version, NULL, "Read firmware version", cmd_version),
@@ -493,6 +495,7 @@ static int pinmux_efgtch_trckbl_init(void) {
     set_rgb_en(false);
     set_bl_en(false);
 
+#ifdef CONFIG_LOG_DOMAIN_ID
     const uint32_t src_cnt = log_src_cnt_get(CONFIG_LOG_DOMAIN_ID);
     for (uint32_t i = 0; i < src_cnt; i++) {
         if (strcmp(log_source_name_get(CONFIG_LOG_DOMAIN_ID, i), "settings") == 0) {
@@ -501,6 +504,7 @@ static int pinmux_efgtch_trckbl_init(void) {
             break;
         }
     }
+#endif
 
     k_work_schedule(&rgb_hw_check_work, K_MSEC(100));
     return 0;
