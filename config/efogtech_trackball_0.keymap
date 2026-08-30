@@ -133,11 +133,11 @@
 			display-name = "Copy/paste/layer (click/double-click/hold)";
 			#binding-cells = <2>;
 			flavor = "tap-preferred";
-			tapping-term-ms = <325>;
-			bindings = <&mo>, <&cdc>;
+			tapping-term-ms = <300>;
+			bindings = <&mo>, <&cdc_rci>;
 		};
 
-		cdc: click-double-click {
+		cdc_rci: click-double-click {
 			compatible = "zmk,behavior-tap-dance";
 			display-name = "Copy/paste (click/double-click)";
 			#binding-cells = <0>;
