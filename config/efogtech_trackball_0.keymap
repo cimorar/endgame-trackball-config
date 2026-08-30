@@ -26,7 +26,7 @@
 			bindings = <
 			    // buttons
 			    &ltm LAYER_USER MCLK 		&ltmkp LAYER_SCROLL LG(TAB)
-			    &mkp LCLK                 	&cdch_rci LAYER_SNIPE 0
+			    &mkp LCLK                 	&CDCH_RCI LAYER_SNIPE 0
 			    &ltm LAYER_EXTRAS RCLK    	&mkp LCLK
 			    &cdch LAYER_DEVICE 0     	&BCK_FWD_HOLD LAYER_DEVICE 0
 
@@ -58,9 +58,9 @@
 			DECLARE_ENCODERS;
 			bindings = <
 			    &bst_copy      &bst_paste
-			    &bst_cut       &lctrl_lalt_home
-			    &bst_undo      &alt_tab
-			    &trans         &lctrl_tab
+			    &bst_cut       &LCTRL_LALT_HOME
+			    &bst_undo      &ALT_TAB
+			    &trans         &LCTRL_TAB
 
 			    &kp C_VOL_UP   &kp LC(TAB)
 			    &kp C_VOL_DN   &kp LC(LS(TAB))
@@ -145,16 +145,16 @@
 	};
 
 	behaviors {
-		cdch_rci: click-double-click-hold-rci {
+		CDCH_RCI: click_double_click_hold_rci {
 			compatible = "zmk,behavior-hold-tap";
-			display-name = "Paste/Copy/layer (click/double-click/hold)";
+			display-name = "Paste/Copy/Layer (click/double-click/hold)";
 			#binding-cells = <2>;
 			flavor = "tap-preferred";
 			tapping-term-ms = <300>;
-			bindings = <&mo>, <&cdc_rci>;
+			bindings = <&mo>, <&CDC_RCI>;
 		};
 
-		cdc_rci: click-double-click-rci {
+		CDC_RCI: click_double_click_rci {
 			compatible = "zmk,behavior-tap-dance";
 			display-name = "Paste/Copy (click/double-click)";
 			#binding-cells = <0>;
@@ -162,7 +162,7 @@
 			bindings = <&kp LG(V)>, <&kp LC(C)>;
 		};
 
-		BCK_FWD: bck-fwd {
+		BCK_FWD: bck_fwd {
 			compatible = "zmk,behavior-tap-dance";
 			display-name = "Back/Forward (tap/double-tap)";
 			#binding-cells = <0>;
@@ -170,7 +170,7 @@
 			bindings = <&mkp MB4>, <&mkp MB5>;
 		};
 
-		BCK_FWD_HOLD: bck-fwd-hold {
+		BCK_FWD_HOLD: bck_fwd_hold {
 			compatible = "zmk,behavior-hold-tap";
 			display-name = "Back/Forward/Layer (click/double-click/hold)";
 			#binding-cells = <2>;
@@ -181,7 +181,7 @@
 	};
 
 	macros {
-		alt_tab: alt_tab {
+		ALT_TAB: alt_tab {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
@@ -191,7 +191,7 @@
                 , <&macro_release &kp LALT>;
         };
 
-		lctrl_tab: lctrl_tab {
+		LCTRL_TAB: lctrl_tab {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
@@ -201,7 +201,7 @@
                 , <&macro_release &kp LCTRL>;
         };	
 
-		lctrl_lalt_home: lctrl_lalt_home {
+		LCTRL_LALT_HOME: lctrl_lalt_home {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             bindings
